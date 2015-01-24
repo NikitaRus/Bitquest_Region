@@ -5,10 +5,80 @@
 
 	<body>
 
-	<div style="" id="mapBox" style="width:1000px; height:640px">
+	<div style="display: inline-table;
+    position: absolute;
+    background: rgba(80, 110, 128, 0.86);
+    height: 700px;
+    overflow: auto;
+    border: double 5px;
+    border-color: #254E63;
+    width: 992px !important;
+    top: 100px;
+    left: 0px;
+    background-image: url('img/bit.png');
+    margin: 10px;" id="mapBox" style="width:1000px; height:640px">
     <canvas id="bitCvas" width="992" height="667"></canvas>
-</div>
-</div>
+	</div>
+
+	<script>
+
+		var Regions = [
+		[80, 180, 250, 240],
+		[300, 100, 200, 220],
+		[330, 320, 100, 70],
+		[300, 380, 110, 200],
+		[420, 350, 160, 190],
+		[500, 150, 380, 300]];
+
+		var RegionalControl = [20, 10, 60, 20, 10, 30];
+
+
+		var mouseX, mouseY;
+		var sumOfControl = 0;
+
+		for(Control in RegionalControl)
+		{
+			sumOfControl += RegionalControl[Control];
+		}
+
+		function mouseHover(e) {
+			mouseX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - bitCvas.offsetLeft;
+        	mouseY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - bitCvas.offsetLeft - 105;
+
+        	console.log(mouseX + " " + mouseY);
+
+        	for(Region in Regions)
+        	{
+        		if(mouseX > Regions[Region][0] &&
+        		   mouseX < Regions[Region][0] + Regions[Region][2] && 
+        		   mouseY > Regions[Region][1] && 
+        		   mouseY < Regions[Region][1] + Regions[Region][3])
+        		{
+        			bitBox.clearRect(0, 0, 1000, 1000);
+        			bitBox.strokeStyle = "white";
+        			bitBox.strokeRect(Regions[Region][0],Regions[Region][1],Regions[Region][2],Regions[Region][3]);
+
+        			bitBox.strokeRect(Regions[Region][0],Regions[Region][1]-50, 150, 20);
+        			bitBox.strokeText(parseInt(100*RegionalControl[Region]/sumOfControl) + "% Region: " + Region, Regions[Region][0]+1, Regions[Region][1]-59);
+        			bitBox.fillRect(Regions[Region][0]+1, Regions[Region][1]-49, 148/100*(100*RegionalControl[Region]/sumOfControl), 18);
+        		}
+        	}
+		};
+
+		bitCvas.addEventListener("mousemove", mouseHover, false)
+
+		//var cursorPositionInterval = setInterval(getCursorPosition(e), 100);
+
+		bitCvas = document.getElementById("bitCvas");
+		bitBox = bitCvas.getContext("2d");
+
+		for(Region in Regions)
+		{
+			bitBox.strokeRect(Regions[Region][0],Regions[Region][1],Regions[Region][2],Regions[Region][3]);
+		}
+
+
+	</script>
 
 	</body>
 </html>
